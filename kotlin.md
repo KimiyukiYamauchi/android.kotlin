@@ -219,7 +219,7 @@ outerLoop@ for (i in 1..3) {
 }
 ```
 
-#### サンプルコード: 簡単な計算機アプリ
+### 1.5 サンプルコード: 簡単な計算機アプリ
 
 ```kotlin
 
@@ -289,4 +289,606 @@ fun main() {
         println()
     }
 }
+```
+
+## 第２章 関数とクラス
+
+### 2.1 関数の定義と呼び出し
+
+#### 関数の定義
+
+```kotlin
+// 引数と戻り値を持つ関数
+fun add(a: Int, b: Int): Int {
+    return a + b
+}
+
+// 引数を持たず、戻り値もない関数
+fun printHello() {
+    println("Hello, World!")
+}
+```
+
+#### 関数の呼び出し
+
+```kotlin
+val result = add(3, 5)
+println(result) // 8
+
+printHello() // "Hello, World!"
+```
+
+#### デフォルト引数
+
+```kotlin
+fun greet(name: String = "Guest") {
+    println("Hello $name!")
+}
+
+greet("Alice") // "Hello, Alice!"
+greet() // "Hello, Guest!"
+```
+
+#### 名前付き引数
+
+```kotlin
+fun introduce(name: String, age: Int) {
+    println("My name is $name, and I am $age years old.")
+}
+
+introduce(age = 25, name = "Bob") // "My name is Bob, and I am 25 years old."
+```
+
+#### 拡張関数
+
+```kotlin
+fun String.reverse(): String {
+  return this.reversed()
+}
+
+val str = "Hello, World!"
+println(str.reverse()) // "!dlroW ,olleH"
+```
+
+### 2.2 クラスとオブジェクト
+
+#### クラスの定義
+
+```kotlin
+class Person {
+    var name: String = ""
+    var age: Int = 0
+
+    fun introduce() {
+        println("My name is $name, and I am $age years old.")
+    }
+}
+```
+
+#### オブジェクトの作成
+
+```kotlin
+val person = Person()
+person.name = "Alice"
+person.age = 12
+person.introduce() // "My name is Alice, and I am 12 years old."
+```
+
+#### プライマリコンストラクタ
+
+```kotlin
+class Person(var name: String, var age: Int) {
+    fun introduce() {
+        println("My name is $name, and I am $age years old.")
+    }
+}
+
+fun main() {
+    val person = Person("Bob", 30)
+    person.introduce() // "My name is Bob, and I am 30 years old."
+}
+```
+
+#### initブロック
+
+```kotlin
+class Person(var name: String, var age: Int) {
+    init {
+        println("Creating a new Person object with $name and age $age")
+    }
+    fun introduce() {
+        println("My name is $name, and I am $age years old.")
+    }
+}
+
+fun main() {
+    val person = Person("Smith", 40) // "Creating a new Person object with Smith and age 40"
+    person.introduce() // "My name is Smith, and I am 40 years old."
+}
+```
+
+#### セカンダリコンストラクタ
+
+```kotlin
+class Person(var name: String, var age: Int) {
+   constructor(name: String) : this(name, 0)
+
+    fun introduce() {
+        println("My name is $name, and I am $age years old.")
+    }
+}
+
+fun main() {
+    val person1 = Person("Smith", 40) // "Creating a new Person object with Smith and age 40"
+    val person2 = Person("Taro")
+
+    person1.introduce() // "My name is Smith, and I am 40 years old."
+    person2.introduce() // "My name is Taro, and I am 0 years old."
+}
+```
+
+### 2.3 プロパティとゲッター・セッター
+
+#### プロパティの定義
+
+```kotlin
+class Person() {
+   var name: String = ""
+    val birthYear: Int = 1990
+}
+```
+
+#### ゲッターとセッター
+
+```kotlin
+class Person() {
+   var name: String = ""
+       get() = field.uppercase()
+       set(value) {
+           field = value.trim()
+       }
+}
+
+fun main() {
+    val person = Person()
+    person.name = "   Alice    "
+    println(person.name) // "ALICE"
+}
+```
+
+#### バッキングフィールド
+
+```kotlin
+class Person() {
+   var age: Int = 0
+       set(value) {
+           field = if (value >= 0) value else 0
+       }
+}
+
+fun main() {
+    val person = Person()
+    person.age = -5
+    println(person.age) // 0
+}
+```
+
+### 2.4 データクラスとオブジェクトの比較
+
+#### データクラス
+
+```kotlin
+data class Person(val name: String, val age: Int)
+
+fun main() {
+    val person1 = Person("Alice", 29)
+    val person2 = Person("Alice", 29)
+    val person3 = Person("Bob", 30)
+
+    println(person1 == person2) // true
+    println(person1 == person3) // false
+}
+```
+
+#### オブジェクトの比較
+
+```kotlin
+class Person(val name: String, val age: Int) {
+    override fun equals(other: Any?): Boolean {
+        if (other !is Person) return false
+        return name == other.name && age == other.age
+    }
+}
+
+fun main() {
+    val person1 = Person("Alice", 29)
+    val person2 = Person("Alice", 29)
+    val person3 = Person("Bob", 30)
+
+    println(person1 == person2) // true
+    println(person1 === person2) // false
+    println(person1 == person3) // false
+}
+```
+
+#### copy()メソッド
+
+```kotlin
+class Person(val name: String, val age: Int) {
+    override fun equals(other: Any?): Boolean {
+        if (other !is Person) return false
+        return name == other.name && age == other.age
+    }
+}
+
+fun main() {
+    val person1 = Person("Alice", 29)
+    val person2 = Person("Alice", 29)
+    val person3 = Person("Bob", 30)
+
+    println(person1 == person2) // true
+    println(person1 === person2) // false
+    println(person1 == person3) // false
+}
+```
+
+### 2.5 サンプルコード: 動物シミュレーション
+
+```kotlin
+open class Animal(val name: String, val age: Int) {
+    open fun makeSound() {
+        println("The animal makes a sound")
+    }
+}
+
+class Dog(name: String, age: Int, var breed: String) : Animal(name, age) {
+    override fun makeSound() {
+        println("The dog barks")
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (other !is Dog) return false
+        return name == other.name && age == other.age && breed == other.breed
+    }
+
+    fun fetch() {
+        println("The dog fetches a ball")
+    }
+}
+
+class Cat(name: String, age: Int, color: String) : Animal(name, age) {
+    override fun makeSound() {
+        println("The cat meows")
+    }
+
+    fun sleep() {
+        println("The cat Sleeps")
+    }
+}
+
+data class Person(val name: String, val age: Int) {
+    fun greet() {
+        println("Hello, my name is $name and I am $age years old")
+    }
+}
+
+fun main() {
+    val dog = Dog("Gon", 3, "Labrador Retriever")
+    val cat = Cat("Cyberd", 3, "Black")
+    val person = Person("Alice", 35)
+
+    dog.makeSound() // "The dog barks"
+    dog.fetch() // "The dog fetches a ball"
+
+    cat.makeSound() // "The cat meows"
+    cat.sleep() // "The cat Sleeps"
+
+    person.greet() // "Hello, my name is Alice and I am 35 years old"
+
+    val dog2 = Dog("Gon", 3, "Labrador Retriever")
+    val cat2 = Cat("Cyberd", 3, "Orange")
+
+    println(dog == dog2) // true
+    println(cat == cat2) // false
+
+    val person2 = Person("Alice", 35)
+    println(person == person2) // true
+}
+```
+
+## 第３章 Kotlinの特徴的な機能
+
+### 3.1 配列とリスト
+
+#### 配列
+
+```kotlin
+fun main() {
+    val numbers = arrayOf(1, 2, 3, 4, 5)
+    println(numbers[0]) // 1
+    println(numbers[2]) // 3
+
+    numbers[3] = 10
+    println(numbers[3]) // 10
+
+    val size = numbers.size
+    println(size) // 5
+}
+```
+
+#### リスト
+
+```kotlin
+fun main() {
+    val fruits = listOf("apple", "banana", "orange")
+    println(fruits[1]) // "banana"
+
+//    fruits[2] = "grape" // コンパイルエラー(読み取り専用リスト)
+
+    val mutableFruits = mutableListOf("apple", "banana", "orange")
+    mutableFruits[2] = "grape"
+    mutableFruits.add("pineapple")
+    println(mutableFruits) // [apple, banana, grape, pineapple]
+}
+```
+
+#### リストの操作
+
+```kotlin
+fun main() {
+    val numbers = listOf(1, 2, 3, 4, 5)
+
+    val evenNumbers = numbers.filter { it % 2 == 0 }
+    println(evenNumbers) // [2, 4]
+
+    val squaredNums = numbers.map { it * it }
+    println(squaredNums) // [1, 4, 9, 16, 25]
+
+    val sum = numbers.reduce { acc, i -> acc + i }
+    println(sum) // 15
+
+    val firstEvenNumber = numbers.find { it % 2 == 0 }
+    println(firstEvenNumber) // 2
+}
+```
+
+#### arrayOf、listOf、mutableListOfの使い分け
+
+| 目的                             | 使うもの          |
+| -------------------------------- | ----------------- |
+| 要素を **変更する必要がある**    | `arrayOf`（配列） |
+| **読み取り専用**で安全に扱いたい | `listOf`          |
+| 追加・削除・更新したい           | `mutableListOf`   |
+| Java配列互換・高速・固定長       | `arrayOf`         |
+
+- **基本は** listOf
+- 変更が必要 → mutableListOf
+- 配列は **特別な理由があるときだけ**
+- Kotlinは「変更できない設計」を推奨する言語
+
+### 3.2 セットとマップ
+
+#### セット
+
+```kotlin
+fun main() {
+    val fruits = setOf<String>("apple", "banana", "orange", "banana")
+    println(fruits) // [apple, banana, orange]
+
+    val numbers = mutableSetOf<Int>(1, 2, 3, 4, 5)
+    numbers.add(6)
+    numbers.add(3)
+    println(numbers) // [1, 2, 3, 4, 5, 6]
+}
+```
+
+#### マップ
+
+```kotlin
+fun main() {
+    val fruits = setOf<String>("apple", "banana", "orange", "banana")
+    println(fruits) // [apple, banana, orange]
+
+    val numbers = mutableSetOf<Int>(1, 2, 3, 4, 5)
+    numbers.add(6)
+    numbers.add(3)
+    println(numbers) // [1, 2, 3, 4, 5, 6]
+}
+```
+
+#### セットとマップの操作
+
+```kotlin
+fun main() {
+    val numbers = setOf(1, 2, 3, 4, 5)
+    println(numbers.contains(3)) // true
+    println(numbers.isEmpty()) // false
+    println(numbers.size) // 5
+
+    val ages = mapOf<String, Int>("Alice" to 25, "Bob" to 30, "Charlie" to 45)
+    println(ages.containsKey("Alice")) // true
+    println(ages.containsValue(45)) // trur
+    println(ages.keys) // [Alice, Bob, Charlie]
+    println(ages.values) // [25, 30, 45]
+}
+```
+
+### 3.3 ラムダ式と高階関数
+
+#### ラムダ式
+
+```kotlin
+fun main() {
+    val sum = { x: Int, y: Int -> x + y }
+    println(sum(1, 2)) // 3
+
+    val square: (Int) -> Int = { x -> x * x }
+    println(square(3)) // 9
+}
+```
+
+#### 高階関数
+
+```kotlin
+fun main() {
+    fun applyOptions(x: Int, y: Int, operation: (Int, Int) -> Int): Int {
+        return operation(x, y)
+    }
+
+    val result1 = applyOptions(10, 20, { x, y -> x + y })
+    println(result1) // 30
+
+    val result2 = applyOptions(10, 20, { x, y -> x * y })
+    println(result2) // 200
+}
+```
+
+#### スコープ関数
+
+```kotlin
+data class Person(var name: String, var age: Int, var address: String)
+
+fun main() {
+    val person = Person("Alice", 28, "").apply {
+        address = "New York City"
+        age++
+    }
+
+    println(person) // Person(name=Alice, age=29, address=New York City)
+}
+
+```
+
+##### スコープ関数の特徴
+
+- let: オブジェクトを"it"として参照、結果を返す
+- run: オブジェクトを"this"として参照、結果を返す
+- with: オブジェクトを"this"として参照、結果を返す(拡張関数ではない)
+- apply: オブジェクトを"this"として参照、オブジェクト自体を返す
+- also: オブジェクトを"it"として参照、オブジェクト自体を返す
+
+### 3.4 コレクションの操作とスコープ関数
+
+#### コレクションの操作関数
+
+```kotlin
+fun main() {
+    val numbers = listOf(1, 2, 3, 4, 5)
+
+    val evenNumbers = numbers.filter { it % 2 == 0 }
+    println(evenNumbers) // [2, 4]
+
+    val squaredNumbers = numbers.map { it * it }
+    println(squaredNumbers) // [1, 4, 9, 16, 25]
+
+    val sum = numbers.reduce{ acc, i -> acc + i}
+    println(sum) // 15
+
+    val firstEvenNumber = numbers.find { it % 2 == 0 }
+    println(firstEvenNumber) // 2
+
+    val sortedNumbers = numbers.sorted()
+    println(sortedNumbers)  // [1, 2, 3, 4, 5]
+}
+```
+
+#### スコープ関数とコレクションの操作
+
+```kotlin
+fun main() {
+    val numbers = listOf(1, 2, 3, 4, 5)
+
+    val result = numbers.filter { it % 2 == 0 }
+        .map{it * it}
+        .reduce{acc, i -> acc + i}
+    println(result) // 20
+}
+```
+
+```kotlin
+fun main() {
+    val numbers = listOf(1, 2, 3, 4, 5)
+
+    val result = numbers.let {
+        it.filter { it % 2 == 0 }
+            .map{it * it}
+            .reduce { acc, i -> acc + i }
+    }
+
+    println(result) // 20
+}
+```
+
+### 3.5 サンプルコード: タスク管理アプリケーション
+
+```kotlin
+data class Task(val name: String, var isCompleted: Boolean = false)
+
+fun main() {
+    val tasks = mutableListOf<Task>()
+
+    fun addTask(name: String) {
+        tasks.add(Task(name))
+        println("Task added: $name")
+    }
+
+    fun completeTask(index: Int) {
+        if (index in tasks.indices) {
+            tasks[index].isCompleted = true
+            println("Task completed: ${tasks[index].name}")
+        } else {
+            println("Invalid task index")
+        }
+    }
+
+    fun printTasks() {
+        if (tasks.isEmpty()) {
+            println("No tasks found")
+        } else {
+            tasks.forEachIndexed { index, task ->
+                val status = if (task.isCompleted) "completed" else "Pending"
+                println("${index + 1}. ${task.name} - $status")
+            }
+        }
+    }
+
+    fun printCompletedTasks() {
+        val completedTasks = tasks.filter { it.isCompleted }
+        if (completedTasks.isEmpty()) {
+            println("No completed tasks found")
+        } else {
+            println("Completed tasks")
+            completedTasks.forEach { println("- ${it.name}") }
+        }
+    }
+
+    fun countPendingTasks(): Int {
+        return tasks.count { !it.isCompleted}
+    }
+
+    addTask("Buy groceries")
+    addTask("Finish proect report")
+    addTask("Check out")
+
+    printTasks()
+    // 1. Buy groceries - Pending
+    // 2. Finish proect report - Pending
+    // 3. Check out - Pending
+
+    completeTask(1)
+    // Task completed: Finish proect report
+
+    printTasks()
+    // 1. Buy groceries - Pending
+    // 2. Finish proect report - completed
+    // 3. Check out - Pending
+
+    printCompletedTasks()
+    // - Finish proect report
+
+    val pendingTasksCount = countPendingTasks()
+    println("Pending tasks count: $pendingTasksCount")
+    // Pending tasks count: 2
+}
+
 ```
