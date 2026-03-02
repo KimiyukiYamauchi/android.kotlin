@@ -927,5 +927,214 @@ fun main() {
 #### Nullableタイプ
 
 ```kotlin
+fun main() {
+    val stt1: String = "Hello"  // non-null
+    val str2: String? = null    // Nullable
+
+    println(str1.length)    // 5
+//    println(str2.length)    // コンパイルエラー
+}
+```
+
+```kotlin
+fun main() {
+    val str1: String = "Hello"  // non-null
+    val str2: String? = null    // Nullable
+
+    println(str1.length)    // 5
+    println(str2?.length)    // 安全呼び出し演算子(?.)
+}
+```
+
+#### エルビス演算子
+
+```kotlin
+fun main() {
+    val str: String? = null
+    val length = str?.length ?: -1
+
+    println(length)    // -1
+}
+```
+
+#### 強制アンラップ
+
+```kotlin
+fun main() {
+    val str: String? = "Hello"
+    val length = str!!.length
+
+    println(length)    // 5
+}
+```
+
+### 4.2 例外処理とtry-catch式
+
+#### try-catch式の基本構文
+
+```kotlin
+try {
+    // 例外が発生する可能性のあるコード
+} catch (e: ExceptionType1) {
+    // ExceptionType1の例外が発生した場合の処理
+} catch (e: ExceptionType2) {
+    // ExceptionType2の例外が発生した場合の処理
+} finally {
+    // 例外の発生に関係なく実行されるコード
+}
+```
+
+#### 例外のスロー
+
+```kotlin
+fun divide(a: Int, b: Int): Int {
+    if (b == 0) {
+        throw IllegalArgumentException("Division by zero")
+    }
+    return a / b
+}
+```
+
+#### 例外のキャッチ
+
+```kotlin
+fun main() {
+    try {
+        val result = divide(10, 0)
+        println(result)
+    } catch (e: IllegalArgumentException) {
+        println("Error: ${e.message}")
+    }
+}
+```
+
+#### 複数の例外のキャッチ
+
+```kotlin
+try {
+    // 例外が発生する可能性のあるコード
+} catch (e: ExceptionType1) {
+    // ExceptionType1の例外が発生した場合の処理
+} catch (e: ExceptionType2) {
+    // ExceptionType2の例外が発生した場合の処理
+}
+```
+
+```kotlin
+fun divide(a: Int, b: Int): Int {
+    if (b == 0) {
+        throw IllegalArgumentException("Division by zero is not allowed")
+    }
+    return a / b
+}
+
+fun main() {
+    try {
+        print("Enter first number: ")
+        val a = readLine()!!.toInt()
+
+        print("Enter second number: ")
+        val b = readLine()!!.toInt()
+
+        val result = divide(a, b)
+        println("Result: $result")
+
+    } catch (e: IllegalArgumentException) {
+        println("Calculation error: ${e.message}")
+
+    } catch (e: NumberFormatException) {
+        println("Input error: Please enter a valid integer")
+
+    } catch (e: Exception) {
+        println("Unexpected error: ${e.message}")
+
+    }
+}
+
+```
+
+#### finallyブロック
+
+```kotlin
+try {
+    // 例外が発生する可能性のあるコード
+} catch (e: Exception) {
+    // 例外が発生した場合の処理
+} finally {
+    // 例外の発生に関係なく実行されるコード
+}
+```
+
+```kotlin
+fun divide(a: Int, b: Int): Int {
+    if (b == 0) {
+        throw IllegalArgumentException("Division by zero is not allowed")
+    }
+    return a / b
+}
+
+fun main() {
+    try {
+        print("Enter first number: ")
+        val a = readLine()!!.toInt()
+
+        print("Enter second number: ")
+        val b = readLine()!!.toInt()
+
+        val result = divide(a, b)
+        println("Result: $result")
+
+    } catch (e: IllegalArgumentException) {
+        println("Calculation error: ${e.message}")
+
+    } catch (e: NumberFormatException) {
+        println("Input error: Please enter a valid integer")
+
+    } catch (e: Exception) {
+        println("Unexpected error: ${e.message}")
+
+    } finally {
+        println("Execution finished")
+    }
+}
+```
+
+### 4.3 エルビス演算子と安全呼び出し
+
+#### エルビス演算子とif-else式
+
+```kotlin
+fun main() {
+    val str: String? = null
+    val length = str?.length ?: -1
+
+    println(length)    // -1
+}
+```
+
+```kotlin
+fun main() {
+    val str: String? = null
+    val length = if (str != null) str.length else -1
+
+    println(length)    // -1
+}
+```
+
+#### 安全呼び出し
+
+```kotlin
+fun main() {
+    val str: String? = "Hello"  // Nullable
+    println(str?.length)    // 5
+
+    val nullStr: String? = null // Nullable
+    println(nullStr?.length)    // null
+}
+```
+
+#### 安全呼び出しとエルビス演算子の組み合わせ
+
+```kotlin
 
 ```
