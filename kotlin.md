@@ -22,6 +22,10 @@
   - [3.5 サンプルコード: タスク管理アプリケーション](#35-サンプルコード-タスク管理アプリケーション)
 - [第４章 Null完全性と例外処理](#第４章-null完全性と例外処理)
   - [4.1 Null安全性とNullableタイプ](#41-null安全性とnullableタイプ)
+  - [4.2 例外処理とtry-catch式](#42-例外処理とtry-catch式)
+  - [4.3 エルビス演算子と安全呼び出し](#43-エルビス演算子と安全呼び出し)
+  - [4.4 letとrunを使った安全なNull処理](#44-letとrunを使った安全なnull処理)
+  - [4.5 サンプルコード: ユーザ情報管理システム](#45-サンプルコード-ユーザ情報管理システム)
 
 <!-- /TOC -->
 
@@ -1136,5 +1140,143 @@ fun main() {
 #### 安全呼び出しとエルビス演算子の組み合わせ
 
 ```kotlin
+fun main() {
+    val str: String? = null  // Nullable
+    println(str?.length ?: "Empty")    // 5
+}
+```
 
+#### let関数との組み合わせ
+
+```kotlin
+fun main() {
+    val str: String? = "Hello"
+    str?.let {
+        println("length: ${it.length}")    // 5
+        println("Uppercase: ${str.uppercase(getDefault())}")
+    }
+}
+```
+
+### 4.4 letとrunを使った安全なNull処理
+
+#### let関数
+
+```kotlin
+fun main() {
+    val str: String? = "Hello"
+    str?.let {
+        println("length: ${it.length}")    // 5
+        println("Uppercase: ${str.uppercase(getDefault())}")
+    }
+}
+```
+
+#### let関数とエルビス演算子の組み合わせ
+
+```kotlin
+fun main() {
+    val str: String? = null
+    val length = str?.let {  it.length } ?: 0
+
+    println(length) // 0
+}
+```
+
+#### run関数
+
+```kotlin
+fun main() {
+    val str: String? = "Hello"
+    val length = str?.run {
+        println("Uppercase: ${uppercase(getDefault())}")
+        length
+    }
+
+    println(length) // 5
+}
+```
+
+#### run関数とエルビス演算子の組み合わせ
+
+```kotlin
+fun main() {
+    val str: String? = null
+    val length = str?.run { length } ?: -1
+
+    println(length) // -1
+}
+```
+
+#### letとrunの使い分け
+
+- let: Nullableな値に対して処理を行い、その結果を使用する場合に使用します。
+- run: Nullableな値に対して処理を行い、その結果を返す場合に使用します。
+
+### 4.5 サンプルコード: ユーザ情報管理システム
+
+```kotlin
+data class User(val id: Int, var name: String, var age: Int?, var email: String?)
+
+fun main() {
+    val usrs = mutableListOf<User>()
+
+    fun addUser(id: Int, name: String, age: Int? = null, email: String? = null) {
+        usrs.add(User(id, name, age, email))
+        println("User added: $name")
+    }
+
+    fun findUserById(id: Int): User? {
+        return usrs.find { it.id == id }
+    }
+
+    fun updateUserEmail(id: Int, email: String) {
+        val user = findUserById(id)
+        user?.let {
+            it.email = email
+            println("User updated for user: ${it.name}")
+        } ?: run {
+            println("User not found with id: $id")
+        }
+    }
+
+    fun printUser(user: User?) {
+        user?.let {
+            println("User: ${it.name}")
+            println("Age: ${it.age ?: "N/A"}")
+            println("Email: ${it.email ?: "N/A"}")
+        } ?: run {
+            println("User not found")
+        }
+    }
+
+    try {
+        addUser(1, "John Doe", 30, "John@example.com")
+        addUser(2, "Jane Smith", 25)
+        addUser(3, "Mike Johnson")
+
+        val user = findUserById(2)
+        printUser(user)
+        // User: Jane Smith
+        // Age: 25
+        // Email: N/A
+
+        updateUserEmail(2, "Jane@exaple.com")
+        // User updated for user: Jane Smith
+
+        updateUserEmail(4, "invalid@exaple.com")
+        // User not found with id: 4
+
+        printUser(findUserById(1))
+        // User: John Doe
+        // Age: 30
+        // Email: John@example.com
+
+        printUser(findUserById(5))
+        // User not found
+
+    } catch (e: Exception) {
+        println("An error occurred: ${e.message}")
+    }
+}
 ```
