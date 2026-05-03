@@ -72,8 +72,10 @@ sudo usermod -aG libvirt $USER
 ##### ③ 仮想化が有効か確認
 
 ```bash
-③ 仮想化が有効か確認
+kvm-ok
 ```
+
+`KVM acceleration can be used` と出れば OK 👍
 
 #### よくあるトラブル
 
