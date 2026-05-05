@@ -26,6 +26,14 @@
   - [4.3 エルビス演算子と安全呼び出し](#43-エルビス演算子と安全呼び出し)
   - [4.4 letとrunを使った安全なNull処理](#44-letとrunを使った安全なnull処理)
   - [4.5 サンプルコード: ユーザ情報管理システム](#45-サンプルコード-ユーザ情報管理システム)
+- [第5章 高度の機能](#第5章-高度の機能)
+  - [5.1 拡張関数とプロパティ](#51-拡張関数とプロパティ)
+  - [5.2 ジェネリクスと型パラメータ](#52-ジェネリクスと型パラメータ)
+  - [5.3 オブジェクト式とオブジェクト宣言](#53-オブジェクト式とオブジェクト宣言)
+  - [5.4 委譲プロパティ](#54-委譲プロパティ)
+  - [5.5 シールドクラス(Sealed Classes)](#55-シールドクラスsealed-classes)
+  - [5.6 型エイリアス](#56-型エイリアス)
+  - [5.7 インライン関数](#57-インライン関数)
 
 <!-- /TOC -->
 
@@ -1277,6 +1285,546 @@ fun main() {
 
     } catch (e: Exception) {
         println("An error occurred: ${e.message}")
+    }
+}
+```
+
+## 第5章 高度の機能
+
+### 5.1 拡張関数とプロパティ
+
+#### 拡張関数
+
+```kotlin
+fun main() {
+    fun String.removeWhitespace(): String {
+        return this.replace("\\s+".toRegex(), "")
+    }
+
+    val str = "   Hello,    World!   "
+    val trimmedStr = str.removeWhitespace()
+    println(trimmedStr) // Hello,World!
+}
+```
+
+#### 拡張関数のスコープ
+
+```kotlin
+fun main() {
+    class Person(val name: String) {
+        fun introduce() {
+            println("My name is $name")
+        }
+    }
+
+    fun Person.sayHello() {
+        println("Hello, I'm ${this.name}")
+    }
+
+    val person = Person("Dmitry")
+    person.introduce() // My name is Dmitry
+    person.sayHello() // Hello, I'm Dmitry
+}
+```
+
+#### 拡張プロパティ
+
+```kotlin
+val String.wordCount: Int
+    get() = this.split("\\s+".toRegex()).size
+
+fun main() {
+   val str = "Hello, World! How are you?"
+   println(str.wordCount) // 5
+}
+```
+
+#### 拡張関数とプロパティの注意点
+
+- 拡張関数とプロパティは、クラスの内部にアクセスすることはできません。
+- 拡張関数とプロパティは、オーバーライドすることはできません。
+- 同名の関数やプロパティがクラスに既に存在する場合、拡張関数やプロパティは無視されます。
+
+### 5.2 ジェネリクスと型パラメータ
+
+#### ジェネリックなクラス
+
+```kotlin
+fun main() {
+    class Box<T> (private var value: T) {
+        fun getValue(): T = value
+        fun setValue(newValue: T) {
+            value = newValue
+        }
+    }
+
+    val inBox = Box<Int>(10)
+    println(inBox.getValue()) // 10
+
+    val stringBox = Box<String>("Hello World")
+    println(stringBox.getValue()) // Hello World
+}
+```
+
+#### ジェネリックな関数
+
+```kotlin
+fun main() {
+    fun <T> printValue(value: T){
+        println(value)
+    }
+
+    printValue<Int>(10)
+    printValue<String>("Hello")
+    printValue<Boolean>(true)
+}
+```
+
+#### 型パラメータの制約
+
+```kotlin
+fun main() {
+    fun <T : Comparable<T>> findMax(a: T, b: T): T {
+        return if (a > b) a else b
+    }
+
+   val maxInt = findMax(10, 20)
+    println(maxInt) // 20
+
+    val maxString = findMax("Hello", "World")
+    println(maxString) // World
+}
+```
+
+#### スター投影
+
+```kotlin
+fun main() {
+    fun printValues(list: List<*>) {
+        for (value in list) {
+            println(value.toString())
+        }
+    }
+
+   val intList = listOf(1, 2, 3)
+    val stringList = listOf("Hello", "World")
+
+    printValues(intList)
+    printValues(stringList)
+}
+
+```
+
+### 5.3 オブジェクト式とオブジェクト宣言
+
+#### オブジェクト宣言
+
+- クラス定義と同時にそのインスタンスが生成される
+- 別途インスタンス化する必要がない
+- スレッドセーフなシングルトンを簡単に実装
+
+```kotlin
+object DataManager {
+    private val data = mutableListOf<String>()
+
+    fun addData(item: String) {
+        data.add(item)
+    }
+
+    fun getData(): List<String> = data
+}
+
+fun main() {
+    DataManager.addData("Item 1")
+    DataManager.addData("Item 2")
+    println(DataManager.getData()) // [Item 1, Item 2]
+}
+
+```
+
+#### オブジェクト式
+
+- インターフェースの即時実装や既存クラスの一時的な拡張
+- 複数のインターフェース実装やクラス拡張が可能
+- ローカルスコープでの変数アクセス
+- コードの再利用性向上
+- 複雑な処理の構造化
+
+```kotlin
+// View.OnClickLister インターフェースを実装する無名オブジェクトを作成
+val clickListener = object : View.OnClickListener {
+    // ボタンがクリックされたときに呼び出されるメソッド
+    override fun onClick(v: View?) {
+        println("Button clicked")
+        // v はクリックされたビュー。必要に応じて使用可能
+    }
+}
+
+// ボタンにクリックリスナーを設定
+button.setOnClickListener(clickListener)
+
+// 注: 以下のような簡潔な書き方も可能
+button.setOnClickListener{println("Button clicked")}
+```
+
+#### コンパニオンオブジェクト
+
+- クラス名を通じて直接アクセスできます。
+- Javaの静的メンバーに相当する機能を提供します。
+- ファクトリーメソッドの実装などに適しています。
+
+```kotlin
+class MyClass {
+    companion object {
+        fun create(): MyClass = MyClass()
+    }
+}
+
+fun main() {
+    val instance = MyClass().create() as MyClass
+}
+```
+
+### 5.4 委譲プロパティ
+
+#### 基本的な委譲プロパティ
+
+- Delegate()クラスはgetValue()とsetValue()メソッドを実装している必要がある。
+
+```kotlin
+class Example {
+    var p: String by Delegate()
+}
+```
+
+#### lazy初期化
+
+- 初期化は最初のアクセス時にのみ行われます。
+- デフォルトでスレッドセーフです。
+- リソースを効率的に使用できます。
+
+```kotlin
+class Person {
+    var name: String by lazy {
+        println("Initializing name")
+        "John Doe"
+    }
+}
+
+fun main() {
+    val person = Person()
+    println(person.name) // "Initializing name"が出力された後、"John Doe"が出力されます
+
+    println(person.name) // 2回目以降は"John Doe"のみが出力されます
+}
+```
+
+#### Observableプロパティ
+
+Observableの特徴
+
+- プロパティの変更を簡単に追跡できます。
+- 変更前後の値にアクセスできます。
+- UIの更新やログ記録などに有用です。
+
+```kotlin
+import kotlin.properties.Delegates
+
+class User  {
+    var name: String by Delegates.observable<String>("initial value") {
+        prop, old, new -> println("$prop changed from $old to $new") }
+}
+
+fun main() {
+    val user = User()
+    user.name = "Alice" // property name (Kotlin reflection is not available) changed from initial value to Alice
+
+    user.name = "Bob" // property name (Kotlin reflection is not available) changed from Alice to Bob
+}
+
+```
+
+#### カスタム委譲
+
+- プロセスのアクセスと変更に特別なロジックを追加できます。
+- コードの再利用性が向上します。
+- 複雑なプロパティの動作をカプセル化できます。
+
+```kotlin
+class StringDelegate {
+    private var value: String = ""
+
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): String {
+        return value
+    }
+
+    operator fun setValue(thisRef: Any?, property: KProperty<*>, value: String) {
+        this.value = value.trim()
+    }
+}
+
+class User  {
+    var name: String by StringDelegate()
+}
+
+fun main() {
+    val user = User()
+    user.name = "Alice"
+    println(user.name) // Alice
+
+    user.name = "Bob"
+    println(user.name) // Bob
+}
+
+```
+
+### 5.5 シールドクラス(Sealed Classes)
+
+#### シールドクラスの基本
+
+- 同じファイル内でのみサブクラスを定義できます(Kotlin 1.1以降は同じモジュール内でも可能)。
+- コンパイラは、シールドクラスすべてのサブクラスを知っています。
+
+```kotlin
+sealed class Result<out T> {
+    data class Success<T>(val value: T) : Result<T>()
+    data class Failure(val error: String) : Result<Nothing>()
+    object Loading : Result<Nothing>()
+}
+```
+
+#### when式との組み合わせ
+
+```kotlin
+sealed class Result<out T> {
+    data class Success<T>(val data: String) : Result<T>()
+    data class Error(val message: String) : Result<Nothing>()
+    object Loading : Result<Nothing>()
+}
+
+fun handleResult(result: Result<Any>) = when (result) {
+    is Result.Success -> println("Success: ${result.data}")
+    is Result.Error -> println("Error: ${result.message}")
+    is Result.Loading -> println("Loading...")
+}
+fun main() {
+    val success = Result.Success<String>("Data loaded")
+    val error = Result.Error("Network Error")
+    val loading = Result.Loading
+
+    handleResult(success)   // Success: Data loaded
+    handleResult(error)     // Error: Network Error
+    handleResult(loading)   // Loading...
+}
+```
+
+#### シールドクラスの使用例
+
+1. APIレスポンスの表現
+
+```kotlin
+sealed class ApiResponse<out T> {
+    data class Success<out T>(val data: T) : ApiResponse<T>()
+    data class Error(val message: String) : ApiResponse<Nothing>()
+    object Loading : ApiResponse<Nothing>()
+}
+```
+
+2. 状態管理
+
+```kotlin
+sealed class UiState<out T> {
+    object Idle : UiState<Nothing>()
+    object Loading : UiState<Nothing>()
+    data class Success<out T>(val data: T) : UiState<T>()
+    data class Error(val message: String) : UiState<Nothing>()
+}
+```
+
+#### シールドクラスとデータクラス
+
+```kotlin
+sealed class Shape {
+    data class Circle(val radius: Double) : Shape()
+    data class Rectangle(val width: Double, val height: Double) : Shape()
+    object Point : Shape()
+}
+
+
+fun describe(shape: Shape): String = when (shape) {
+    is Shape.Circle -> "Circle radius = ${shape.radius}"
+    is Shape.Rectangle -> "Rectangle ${shape.width} x ${shape.height}"
+    Shape.Point -> "Point"
+}
+
+fun calculateArea(shape: Shape): Double = when (shape) {
+    is Shape.Circle -> Math.PI * shape.radius * shape.radius
+    is Shape.Rectangle -> shape.width * shape.height
+    Shape.Point -> 0.0
+}
+
+fun main() {
+    val shapes = listOf(
+        Shape.Circle(2.0),
+        Shape.Rectangle(3.0, 4.0),
+        Shape.Point
+    )
+
+    for (shape in shapes) {
+        val description = describe(shape)
+        val area = calculateArea(shape)
+
+        println(description)
+        println("Area = $area")
+        println("------")
+    }
+}
+
+```
+
+### 5.6 型エイリアス
+
+#### 基本的な型エイリアス
+
+```kotlin
+typealias Name = String
+
+class Person(val name: Name)
+
+fun greet(name: Name){
+    println("Hello $name!")
+}
+
+fun main() {
+    val personName: Name = "Alice"
+    val person = Person(personName)
+    greet(person.name)
+}
+```
+
+#### 複雑な型
+
+```kotlin
+// 複雑な型
+typealias NetworkResult<T> = Result<Pair<T, Map<String, String>>>
+
+// 簡略化された使用
+fun fetchData(): NetworkResult<String> = Result.Loading
+```
+
+#### 関数型への名前つけ
+
+```kotlin
+typealias ClickHandler = (View) -> Unit
+
+class Button {
+    fun setOnClickListener(handler: ClickHandler) {
+        // 実装
+    }
+}
+
+fun main() {
+    val button = Button()
+    button.setOnClickListener { view ->
+        println("Button cliked")
+    }
+}
+```
+
+#### ジェネリクス型エイリアス
+
+```kotlin
+typealias NodeList<T> = List<Node<T>>
+class Node<T> (val value: T, val children: NodeList<T>)
+```
+
+#### 型エイリアスの利点
+
+1. コードの可読性の向上
+1. コードの保守性の向上
+1. ドメイン固有の方の表現
+1. 既存のコードの移行
+
+```kotlin
+data class User(var name: String)
+
+typealias LegacyUser = String
+typealias NewUser = User
+
+fun processUser (user: LegacyUser) {
+    val newUser = NewUser(user)
+    // 新しい処理
+}
+```
+
+### 5.7 インライン関数
+
+#### インライン関数の基本
+
+- コンパイル時に関数呼び出しがインライン展開されます。
+- ラムダ式のオーバーヘッドを削減します。
+- 関数オブジェクトの生成を避けることができます。
+
+```kotlin
+inline fun measureTime(block: () -> Unit) {
+    val start = System.currentTimeMillis()
+    block()
+    val end = System.currentTimeMillis()
+    println("Execution time: ${end - start} ms")
+}
+
+fun main() {
+    // 使用例
+    measureTime {
+        // 時間を計測したい処理
+        Thread.sleep(1000)
+    }
+}
+```
+
+#### インライン関数の利点
+
+1. パフォーマンスの向上
+1. ラムダのオーバーヘッド削減
+1. 非ローカルリターンの可能性
+
+#### reified型パラメータ
+
+- 実行時に型情報にアクセスできる
+- 通常のジェネリック関数では不可能な型チェックが可能
+
+```kotlin
+inline fun <reified T> isType (value: Any) = value is T
+
+fun main() {
+    val result1 = isType<String>("test")
+    println(result1) // true
+    val result2 = isType<Int>("test")
+    println(result2) // false
+}
+```
+
+#### インライン関数の注意点
+
+1. コードサイズの増大
+1. 再帰的なインライン化の制限
+1. public API での使用
+
+#### インライン関数の適切な使用
+
+1. 高階関数のパフォーマンス最適化
+1. ユーティリティ関数(例: ログ記録、計測)
+1. DSL(ドメイン特化言語)の構築
+
+```kotlin
+inline fun transaction(db: Database, block: () -> Unit) {
+    db.beginTransaction()
+    try {
+        block()
+        db.commit()
+    } catch (e: Exception) {
+        db.rollback()
+        throw e
     }
 }
 ```
