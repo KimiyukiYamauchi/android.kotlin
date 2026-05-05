@@ -1,9 +1,12 @@
+<!-- TOC -->
+
 # 目次
 
 - [Android Studioのインストール](#android-studioのインストール)
   - [Snap を使う](#snap-を使う)
 
----
+<!-- /TOC -->
+
 
 ## Android Studioのインストール
 
