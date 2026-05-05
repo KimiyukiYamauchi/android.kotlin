@@ -4,9 +4,10 @@
 
 - [Android Studioのインストール](#android-studioのインストール)
   - [Snap を使う](#snap-を使う)
+- [IntelliJ IDEAのインストール](#intellij-ideaのインストール)
+  - [Snap を使う](#snap-を使う)
 
 <!-- /TOC -->
-
 
 ## Android Studioのインストール
 
@@ -21,8 +22,6 @@ snap version
 ```
 
 エラーが出なければ OK です。
-
----
 
 #### 2. Android Studio をインストール
 
@@ -101,3 +100,30 @@ sudo apt install android-sdk-platform-tools
   → Kotlin / Material Theme UI
 - SDK Manager  
   → 最新 API + 1つ前の API を入れておく
+
+## IntelliJ IDEAのインストール
+
+### Snap を使う
+
+#### 手順
+
+```bash
+sudo snap install intellij-idea-community --classic
+```
+
+#### 起動
+
+```bash
+sudo snap install intellij-idea-community --classic
+```
+
+#### ✅ インストール後にやること（重要）
+
+- JDKを設定（OpenJDKでOK）
+
+```bash
+sudo apt install openjdk-17-jdk
+```
+
+- IntelliJ起動後  
+  →「Project SDK」でJDKを指定
