@@ -114,7 +114,7 @@ sudo snap install intellij-idea-community --classic
 #### 起動
 
 ```bash
-sudo snap install intellij-idea-community --classic
+intellij-idea-community
 ```
 
 #### ✅ インストール後にやること（重要）
