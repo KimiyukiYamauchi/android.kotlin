@@ -113,6 +113,12 @@ sudo snap install intellij-idea-community --classic
 
 #### 起動
 
+GUIから
+
+- アプリ一覧 → IntelliJ IDEA
+
+ターミナルから
+
 ```bash
 intellij-idea-community
 ```
@@ -127,3 +133,13 @@ sudo apt install openjdk-17-jdk
 
 - IntelliJ起動後  
   →「Project SDK」でJDKを指定
+
+### Kotlinを実行する方法
+
+1. IntelliJ起動
+1. 「New Project」
+1. 「Kotlin」選択
+1. 「JDK」を指定（OpenJDK 17など）
+1. 作成
+1. 実行方法
+    - ```main()``` の左の ▶ ボタンを押すだけ
