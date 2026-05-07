@@ -101,6 +101,47 @@ sudo apt install android-sdk-platform-tools
 - SDK Manager  
   → 最新 API + 1つ前の API を入れておく
 
+### エミュレータのセットアップ
+
+#### 既存のエミュレータの削除
+
+##### 1️⃣ AVD 一覧確認
+
+```bash
+ls ~/.android/avd
+```
+
+例：
+```bash
+Pixel_5_API_34.avd
+Pixel_5_API_34.ini
+```
+
+##### 2️⃣ 全削除（完全初期化）
+
+```bash
+rm -rf ~/.android/avd/*
+```
+
+##### 3️⃣ キャッシュ削除（必要なら）
+
+```bash
+rm -rf ~/.android/cache
+```
+
+##### 4️⃣ Android Studio 再起動
+→ AVD を新規作成
+
+#### デバイスの作成
+
+##### Device
+
+![](./jpg/setting01.png)
+
+##### Additional settings
+
+![](./jpg/setting02.png)
+
 ## IntelliJ IDEAのインストール
 
 ### Snap を使う
