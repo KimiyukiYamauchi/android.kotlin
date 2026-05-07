@@ -4,8 +4,10 @@
 
 - [Android Studioのインストール](#android-studioのインストール)
   - [Snap を使う](#snap-を使う)
+  - [エミュレータのセットアップ](#エミュレータのセットアップ)
 - [IntelliJ IDEAのインストール](#intellij-ideaのインストール)
   - [Snap を使う](#snap-を使う)
+  - [Kotlinを実行する方法](#kotlinを実行する方法)
 
 <!-- /TOC -->
 
