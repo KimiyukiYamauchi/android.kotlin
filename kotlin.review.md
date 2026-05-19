@@ -14,6 +14,14 @@
   - [Cap03-02.kt](#cap03-02kt)
 - [高階関数について理解度を高める](#高階関数について理解度を高める)
   - [Cap03-03.kt](#cap03-03kt)
+- [論理演算子の理解度を高める](#論理演算子の理解度を高める)
+  - [Cap04-01.kt](#cap04-01kt)
+- [if式の理解度を高める](#if式の理解度を高める)
+  - [Cap04-02.kt](#cap04-02kt)
+- [Listの理解度を高める1](#listの理解度を高める1)
+  - [Cap04-03.kt](#cap04-03kt)
+- [Listの理解度を高める2](#listの理解度を高める2)
+  - [Cap04-04.kt](#cap04-04kt)
 
 <!-- /TOC -->
 
@@ -131,46 +139,47 @@ fun main() {
 
 ```kotlin
 fun main() {
-    // ① 引数も戻り値もない関数を定義して実行する
-    fun lambda0 () {
-        println("lambda0")
-    }
-    lambda0()
+   fun main() {
+  // ❶ 引数も戻り値もない関数を定義して実行する
+  fun lambda0() {
+    println("lambda0")
+  }
+  lambda0()
 
-    // ② ①と同じ処理をラムダ式で表現する(型を明示したラムダ)
-    val lambda1: () -> Unit = {
-        println("lambda1")
-    }
-    lambda1()
+  // ❷ ❶と同じ処理をラムダ式で表現する（型を明示したラムダ）
+  val lambda1: () -> Unit = {
+    println("lambda1")
+  }
+  lambda1()
 
-    // ③ ①②と同じ処理をラムダ式で表現する(型推論)
-    val lambda2 = {
-        println("lambda2")
-    }
-    lambda2()
+  // ❸ ❶❷と同じ処理をラムダ式で表現する（型推論）
+  val lambda2 = {
+    println("lambda2")
+  }
+  lambda2()
 
-    // ④ 引数(文字列)を持つ関数を定義し、"○○さん、こんにちは"と表示する
-    fun greet0 (name: String) {
-        println("name" + " さん、こんにちは")
-    }
-    greet0("みな")
+  // ❹ 引数（文字列）を持つ関数を定義し、"○○さん、こんにちは" と表示する
+  fun greet0(name: String) {
+    println(name + " さん、こんにちは")
+  }
+  greet0("みな")
 
-    // ⑤ ④をラムダ式(型推論)で書き換える
-    val greet1 = { name: String ->
-        println("name" + " さん、こんにちは")
-    }
+  // ❺ ❹をラムダ式（型推論）で書き換える
+  val greet1 = { name: String ->
+    println("$name さん、こんにちは")
+  }
+  greet1("みな")
 
-    // ⑥ 割り算をして結果を返す関数を定義する
-    fun divide (arg1: Int, arg2: Int): Int {
-        return arg1 / arg2
-    }
+  // ❻ 割り算をして結果を返す関数を定義する
+  fun divide(arg1: Int, arg2: Int): Int {
+    return arg1 / arg2
+  }
 
-    // ⑦ divideを呼び出す
-    println(divide(10, 2))
+  // ❼ divideを呼び出す
+  println(divide(10, 2))
 
-    // ⑧ divideを名前付き引数で呼び出し、引数の順序を入れ替える
-    println(divide(arg2 = 2, arg1 = 10))
-
+  // ❽ divideを名前付き引数で呼び出し、引数の順序を入れ替える
+  println(divide(arg2 = 2, arg1 = 10))
 }
 
 ```
@@ -208,4 +217,72 @@ fun main() {
         println("⑦ 引数付きラムダ式： $arg")
     }
 }
+```
+
+## 論理演算子の理解度を高める
+### Cap04-01.kt
+
+```kotlin
+fun main() {
+  var a = 3 // あとで値を変えるためにvarで宣言
+  val b = 3
+  val c = 3
+  val and1 = (a == b) && (b == c)
+  val or1 = (a == b) || (b == c)
+  println("a変更前 and = ${and1}")
+  println("a変更前 or  = ${or1}")
+
+  a = 2 // varで宣言した変数aの値を変更する
+
+  val and2 = (a == b) && (b == c)
+  val or2 = (a == b) || (b == c)
+  println("a変更後 and = ${and2}")
+  println("a変更後 or  = ${or2}")
+}
+
+```
+
+## if式の理解度を高める
+### Cap04-02.kt
+
+```kotlin
+fun main() {
+  val number1 = 4
+  // ifは式なので、条件に応じた値を返せます
+  val message1 = if (number1 % 2 == 0) "偶数" else "奇数"
+  println("number1は${message1}")
+
+  val number2 = 7
+  val message2 = if (number2 % 2 == 0) "偶数" else "奇数"
+  println("number2は${message2}")
+}
+
+```
+
+## Listの理解度を高める1
+### Cap04-03.kt
+
+```kotlin
+fun main() {
+  // listOfでリストを作成。インデックスは0から始まる
+  val gengou = listOf("昭和", "平成", "令和")
+  println("0番目の要素は${gengou[0]}")
+  println("2番目の要素は${gengou[2]}")
+}
+
+```
+
+## Listの理解度を高める2
+### Cap04-04.kt
+
+```kotlin
+fun main() {
+  val items = mutableListOf("A", "B", "C")
+  println("出力1回目：${items}")
+  items.add("D")
+  println("出力2回目：${items}")
+  items.removeAt(1)
+  println("出力3回目：${items}")
+}
+
 ```
