@@ -22,6 +22,16 @@
   - [Cap04-03.kt](#cap04-03kt)
 - [Listの理解度を高める2](#listの理解度を高める2)
   - [Cap04-04.kt](#cap04-04kt)
+- [try-finallyの復習](#try-finallyの復習)
+  - [Cap05-01.kt](#cap05-01kt)
+- [null許容型とletの理解度を高める](#null許容型とletの理解度を高める)
+  - [Cap05-02.kt](#cap05-02kt)
+- [リストとforループの復習1](#リストとforループの復習1)
+  - [Cap05-03.kt](#cap05-03kt)
+- [リストとforループの復習2](#リストとforループの復習2)
+  - [Cap05-04.kt](#cap05-04kt)
+- [リストとmapの理解度を高める](#リストとmapの理解度を高める)
+  - [Cap05-05.kt](#cap05-05kt)
 
 <!-- /TOC -->
 
@@ -283,6 +293,124 @@ fun main() {
   println("出力2回目：${items}")
   items.removeAt(1)
   println("出力3回目：${items}")
+}
+
+```
+
+## try-finallyの復習
+### Cap05-01.kt
+
+
+```kotlin
+fun main() {
+  var flag = false // 最初はfalse
+
+  fun sample1() {
+    try {
+      flag = true
+      println("処理中...")
+      return // ここで関数を抜ける
+    } finally {
+      flag = false
+      println("後片付け処理を実行") // 必ず実行される
+    }
+  }
+
+  sample1()
+  println("処理後のflag = $flag") // falseに戻っている
+}
+
+```
+
+## null許容型とletの理解度を高める
+### Cap05-02.kt
+
+```kotlin
+fun main() {
+  val a: Int? = 5
+  val b: Int? = null
+
+  // これはコンパイルエラーになる
+  //val c = a * b
+  println("開始")
+
+  // letやifでnullチェックをする
+  a?.let {
+    println("aは${it * 2}")
+  }
+
+  b?.let {
+    println("bは${it * 2}") // bの値はnullなのでこの行は実行されない
+  }
+
+  println("終了")
+}
+
+```
+
+## リストとforループの復習1
+### Cap05-03.kt
+
+```kotlin
+fun main() {
+  // listOfで数値のリストを作る（不変リスト）
+  val numbers = listOf(1, 2, 3, 4, 5, 6)
+
+  println("開始")
+  // for文でリストの要素を順に取り出す
+  for (n in numbers) {
+    // もしnが2で割り切れるなら偶数
+    if (n % 2 == 0) {
+      println("偶数: $n")
+    }
+  }
+  println("終了")
+}
+
+```
+
+## リストとforループの復習2
+### Cap05-04.kt
+
+```kotlin
+fun main() {
+  val fruits = listOf("林檎", "梨", "柿")
+
+  println("開始 forEach")
+
+  // forEachで要素を順に取り出す
+  fruits.forEach { fruit ->
+    println("フルーツ: $fruit")
+  }
+
+  println("開始 forEachIndexed")
+
+  // forEachIndexedで要素をインデックス付きで順に取り出す
+  fruits.forEachIndexed { index, fruit ->
+    println("フルーツ$index: $fruit")
+  }
+
+  println("終了")
+}
+
+```
+
+## リストとmapの理解度を高める
+### Cap05-05.kt
+
+```kotlin
+fun main() {
+  val numbers = listOf(1, 2, 3)
+
+  println("開始")
+
+  // mapで各要素を2倍にした新しいリストを作る
+  val numbers2 = numbers.map { it * 2 }
+
+  println("元のリスト: $numbers")
+  println("mapで処理したリスト: $numbers2")
+
+  println("終了")
 }
 
 ```
