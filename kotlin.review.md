@@ -32,6 +32,10 @@
   - [Cap05-04.kt](#cap05-04kt)
 - [リストとmapの理解度を高める](#リストとmapの理解度を高める)
   - [Cap05-05.kt](#cap05-05kt)
+- [enum classについて理解度を高める](#enum-classについて理解度を高める)
+  - [Cap06-01.kt](#cap06-01kt)
+- [when式について理解度を高める](#when式について理解度を高める)
+  - [Cap06-02.kt](#cap06-02kt)
 
 <!-- /TOC -->
 
@@ -411,6 +415,79 @@ fun main() {
   println("mapで処理したリスト: $numbers2")
 
   println("終了")
+}
+
+```
+
+## enum classについて理解度を高める
+### Cap06-01.kt
+
+```kotlin
+// 一般的なenum classの使い方
+enum class TrafficSignal { // 信号機
+  RED,    // 赤
+  YELLOW, // 黄
+  BLUE    // 青
+}
+
+// プロパティ(message)を持つenum class
+enum class TrafficSignalMsg(val message: String) {
+  RED("止まれ"),
+  YELLOW("注意して進め"),
+  BLUE("進め")
+}
+
+fun main() {
+  // 値を表示する（通常のenum）
+  val signal1 = TrafficSignal.RED
+  println(signal1.name)  // → "RED"
+  val signal2 = TrafficSignal.YELLOW
+  println(signal2)       // → "YELLOW"（nameと同じ）
+
+  println("---")
+
+  // 値を表示する（属性付きenum）
+  val signal11 = TrafficSignalMsg.RED
+  println(signal11.message) // → "止まれ"
+  val signal12 = TrafficSignalMsg.YELLOW
+  println(signal12)         // → "？？？”（.message）を付けていない
+  val signal13 = TrafficSignalMsg.BLUE
+  println(signal13.message) // → "？？？"
+}
+
+```
+
+## when式について理解度を高める
+
+### Cap06-02.kt
+
+```kotlin
+enum class TrafficSignal2 { // 信号機
+  RED,    // 赤
+  YELLOW, // 黄
+  BLUE    // 青
+}
+
+fun main() {
+  // if文で分岐した例
+  val signal1 = TrafficSignal2.YELLOW
+  if (signal1 == TrafficSignal2.RED) {
+    println("$signal1 は止まれ")
+  } else if (signal1 == TrafficSignal2.YELLOW) {
+    println("$signal1 は止まれ")
+  } else if (signal1 == TrafficSignal2.BLUE) {
+    println("$signal1 は進んでも良い")
+  }
+
+  val signal2 = TrafficSignal2.RED
+  when (signal2) {
+    TrafficSignal2.RED, TrafficSignal2.YELLOW -> {
+      println("$signal2 は止まれ")
+    }
+    TrafficSignal2.BLUE -> {
+      println("$signal2 は進んでも良い")
+    }
+  }
 }
 
 ```
