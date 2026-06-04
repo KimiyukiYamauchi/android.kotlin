@@ -42,6 +42,10 @@
   - [Cap07-02.kt](#cap07-02kt)
 - [引数なしのwhenについて理解度を高める](#引数なしのwhenについて理解度を高める)
   - [Cap07-03.kt](#cap07-03kt)
+- [無名オブジェクトの生成について理解度を高める](#無名オブジェクトの生成について理解度を高める)
+  - [Cap08-01.kt](#cap08-01kt)
+- [use関数について理解度を高める](#use関数について理解度を高める)
+  - [Cap08-02.kt](#cap08-02kt)
 
 <!-- /TOC -->
 
@@ -568,4 +572,95 @@ fun main() {
   println(describe(a = 3, b = 3)) // equal?
   println(describe(a = 2, b = 4)) // a less than
 }
+```
+
+## 無名オブジェクトの生成について理解度を高める
+
+### Cap08-01.kt
+
+```kotlin
+// 複数の関数を持つインタフェース
+interface NumOp {
+  fun inc(x: Int): Int
+  fun dec(x: Int): Int
+}
+
+fun main() {
+  // その場限りのオブジェクト。インタフェースに沿って実装
+  val op = object : NumOp {
+    var count = 0
+    override fun inc(x: Int): Int {
+      count += x
+      return count
+    }
+
+    override fun dec(x: Int): Int {
+      count -= x
+      return count
+    }
+  }
+  println("NumOp: inc=${op.inc(10)}")
+  println("NumOp: dec=${op.dec(3)}")
+
+  // その場限りのオブジェクト。インタフェースもなし
+  val counter = object {
+    var count = 0
+    fun hit() {
+      count++
+    }
+  }
+  counter.hit()
+  counter.hit()
+  println("Counter: count=${counter.count}")
+}
+
+```
+
+## use関数について理解度を高める
+### Cap08-02.kt
+
+```kotlin
+// Closeableを実装したクラスを用意。InputStream等がこの方式
+class Work1 : java.io.Closeable {
+  override fun close() { // use関数のスコープを抜けると自動実行する
+    println("Work1:リソース開放")
+  }
+
+  fun work() {
+    println("Work1:work()実行")
+  }
+}
+
+// AutoCloseableを実装したクラスを用意。java.util.Scanner等がこの方式
+class Work2 : AutoCloseable {
+  override fun close() { // use関数のスコープを抜けると自動実行する
+    println("Work2:リソース開放")
+  }
+
+  fun process(): Int {
+    println("Work2:process()実行")
+    return (1..6).random()
+  }
+}
+
+fun main() {
+  // Closeableとuseを活用する一般的な方法
+  println("■パターン1 スタート")
+  val w1 = Work1()
+  w1.use { it.work() }
+
+  // useを使わないならば、明示的にclose()を呼び出す必要がある（比較用）
+  println("■パターン2 スタート")
+  val w2 = Work1()
+  try {
+    w2.work()
+  } finally {
+    w2.close() // useと同様の効果を得るためには、try-finallyで書く必要がある
+  }
+  // AutoCloseableとuseを活用する一般的な方法
+  println("■パターン3 スタート")
+  val result = Work2().use { it.process() }
+  println("result=[$result]")
+}
+
 ```
