@@ -36,6 +36,12 @@
   - [Cap06-01.kt](#cap06-01kt)
 - [when式について理解度を高める](#when式について理解度を高める)
   - [Cap06-02.kt](#cap06-02kt)
+- [companion objectについて理解度を高める](#companion-objectについて理解度を高める)
+  - [Cap07-01.kt](#cap07-01kt)
+- [可変長引数について理解度を高める](#可変長引数について理解度を高める)
+  - [Cap07-02.kt](#cap07-02kt)
+- [引数なしのwhenについて理解度を高める](#引数なしのwhenについて理解度を高める)
+  - [Cap07-03.kt](#cap07-03kt)
 
 <!-- /TOC -->
 
@@ -490,4 +496,76 @@ fun main() {
   }
 }
 
+```
+
+## companion objectについて理解度を高める
+
+### Cap07-01.kt
+
+```kotlin
+// コンパニオンオブジェクトの例
+class Ticket1 {
+  companion object {
+    const val PREFIX = "TK-"
+    fun code(id: Int): String = PREFIX + id
+  }
+}
+
+// 一般的な例
+class Ticket2 {
+  val prefix = "TK-"
+  fun code(id: Int): String = prefix + id
+}
+
+fun main() {
+  // クラス名で直接呼び出し
+  println("コンパニオンオブジェクト")
+  println(Ticket1.code(123))
+
+  // 一般的な例
+  println("インスタンス")
+  println(Ticket2().code(456))
+}
+
+```
+
+## 可変長引数について理解度を高める
+
+### Cap07-02.kt
+
+```kotlin
+// 可変長引数(vararg)の例
+fun joinTitles(vararg titles: String): String =
+  "[" + titles.joinToString(" / ")  + "]"
+
+fun main() {
+  // 文字列を渡す
+  println(joinTitles("A", "B", "C")) // [A / B / C]
+
+  // 引数なしで呼び出す
+  println(joinTitles()) // []
+
+  // 配列を渡す（スプレッド演算子 * を使用）
+  val xy = arrayOf("X", "Y")
+  println(joinTitles(*xy)) // [X / Y]
+}
+
+```
+
+## 引数なしのwhenについて理解度を高める
+
+### Cap07-03.kt
+
+```kotlin
+fun describe(a: Int, b: Int): String = when {
+  a >= b -> "a greater or equal"
+  a == b -> "equal"
+  else -> "a less than"
+}
+
+fun main() {
+  println(describe(a = 5, b = 3)) // a greater or equal ?
+  println(describe(a = 3, b = 3)) // equal?
+  println(describe(a = 2, b = 4)) // a less than
+}
 ```
