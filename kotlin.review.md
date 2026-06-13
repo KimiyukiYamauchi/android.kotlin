@@ -46,6 +46,10 @@
   - [Cap08-01.kt](#cap08-01kt)
 - [use関数について理解度を高める](#use関数について理解度を高める)
   - [Cap08-02.kt](#cap08-02kt)
+- [スコープ関数の利用方法について理解度を高めよう](#スコープ関数の利用方法について理解度を高めよう)
+  - [Cap09-01.kt](#cap09-01kt)
+- [安全なnullの扱い方について理解度を高める](#安全なnullの扱い方について理解度を高める)
+  - [Cap09-02.kt](#cap09-02kt)
 
 <!-- /TOC -->
 
@@ -661,6 +665,93 @@ fun main() {
   println("■パターン3 スタート")
   val result = Work2().use { it.process() }
   println("result=[$result]")
+}
+
+```
+
+## スコープ関数の利用方法について理解度を高めよう
+
+### Cap09-01.kt
+
+```kotlin
+// テスト用のクラス
+class Person {
+    var name = "name less"
+    var age = -1
+}
+
+fun main() {
+    val p1 = Person()
+    println("p1 name=[${p1.name}] age=[${p1.age}]")
+
+    // applyはレシーバー(this) を利用し、オブジェクト自身を返す
+    val p2 = Person().apply {
+        name = "佐藤"
+        age = 28
+    }
+    println("p2 name=[${p2.name}] age=[${p2.age}]")
+
+    // alsoはitを使い、オブジェクト自身を返す
+    val p3a = Person().also {
+        it.name = "鈴木"
+        it.age = 18
+    }
+    println("p3a name=[${p3a.name}] age=[${p3a.age}]")
+
+    // alsoはitの代わりに引数名を明示できる
+    val p3b = Person().also { arg ->
+        arg.name = "鈴木b"
+        arg.age = 19
+    }
+    println("p3b name=[${p3b.name}] age=[${p3b.age}]")
+
+    // runは最後の式を返す(インスタンスの初期化と処理をまとめたいときに便利)
+    val p4 = Person().run {
+        name = "山田" // 初期化
+        age = 14 // 初期化
+        "p4 name=[${name}] age=[${age}]" // 初期化後に処理結果(文字列)を返す
+    }
+    println(p4)
+}
+
+```
+
+## 安全なnullの扱い方について理解度を高める
+
+### Cap09-02.kt
+
+```kotlin
+fun main() {
+
+    // 「?.」(安全呼び出し演算子)
+    val name: String? = null
+    val length: Int? = name?.length // nameがnullならlengthもnull
+    println("name=$name")
+    println("length=$length")
+
+    // 「?:」(エルビス演算子)
+    var name2: String? = null
+    var displayName = name2 ?: "nameless" // name2はnullなので"nameless"になる
+    println("displayName=$displayName")
+    name2 = "鈴木"
+    displayName = name2 ?: "nameless" // name2は"鈴木"になる
+    println("displayName=$displayName")
+
+    // letは、nullじゃない時だけに処理を実行する
+    var name3a: String? = null
+    name3a?.let { println("Hello, $it") } // name3aがnullなので実行されない
+    name3a = "田中"
+    name3a?.let { println("Hello, $it") } // name3aがnullでないので実行される
+
+    // letと「?:」の組み合わせ
+    var name3b: String? = null
+    name3b?.let { println("Hello, $it") } ?: println("nameless") // nullなので"nameless"を出力
+    name3b = "null"
+    name3b?.let { println("Hello, $it") } ?: println("nameless") // nullでないので"Hello, null"
+
+    // 「!!」(非Nullアサーション)
+    val name4: String? = null
+    val length2 = name4!!.length // name4がnullならNullPointerException
 }
 
 ```
