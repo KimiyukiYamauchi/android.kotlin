@@ -4,6 +4,13 @@
 
 ### Google Cloud Console
 
+### → 有効なAPIとサービス
+
+#### APIとサービスを有効にする
+
+#### Books APIを選択
+
+
 #### → APIとサービス
 
 #### → 認証情報
