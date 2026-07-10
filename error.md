@@ -1,3 +1,14 @@
+<!-- TOC -->
+
+# 目次
+
+- [import文で、iconsが見つからないエラー](#import文でiconsが見つからないエラー)
+- [動作確認用の画像がない](#動作確認用の画像がない)
+- [`by`でエラー](#byでエラー)
+- [compilerのバージョンでビルドに失敗する](#compilerのバージョンでビルドに失敗する)
+
+<!-- /TOC -->
+
 ## import文で、iconsが見つからないエラー
 
 Jetpack Compose の `Icons` は、Compose Material ライブラリに含まれています。
@@ -19,7 +30,6 @@ dependencies {
 https://raw.githubusercontent.com/KimiyukiYamauchi/android.kotlin/main/images/android-head_flat.png
 ```
 
-
 ## `by`でエラー
 
 以下のimport文を追加
@@ -32,6 +42,7 @@ import androidx.compose.runtime.setValue
 ## compilerのバージョンでビルドに失敗する
 
 `app/build.gradle.kts`の以下の修正。
+
 ```kotlin
 android {
     namespace = "com.example.order"
