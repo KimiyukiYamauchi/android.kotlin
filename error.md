@@ -41,7 +41,7 @@ import androidx.compose.runtime.setValue
 
 ## compilerのバージョンでビルドに失敗する
 
-`app/build.gradle.kts`の以下の修正。
+`app/build.gradle.kts`の「compileSdk」の修正。
 
 ```kotlin
 android {
@@ -73,4 +73,59 @@ android {
         compose = true
     }
 }
+```
+
+## WebViewの呼び出しでエラーとなる
+
+Jetpack Composeで従来のAndroid ViewであるWebViewを表示する場合は、AndroidViewを使用します。
+
+```kotlin
+package com.example.webpageapp
+
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.viewinterop.AndroidView
+
+@Composable
+fun WebView(url: String) {
+    AndroidView(
+        factory = { context ->
+            android.webkit.WebView(context).apply {
+                webChromeClient = android.webkit.WebChromeClient()
+                webViewClient = android.webkit.WebViewClient()
+                settings.javaScriptEnabled = true
+                loadUrl(url)
+            }
+        }
+    )
+}
+
+@Preview
+@Composable
+fun WebViewPreview() {
+    WebView(url = "https://www.google.com/")
+}
+```
+
+## Serializerが見つからない
+
+以下を追加
+
+- build.gradle.kts
+
+```kotlin
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+
+    // これが必要
+    alias(libs.plugins.kotlin.serialization)
+}
+```
+
+- libs.version.toml
+
+```kotlin
+[plugins]
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 ```
