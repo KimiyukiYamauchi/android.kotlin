@@ -32,6 +32,10 @@ dependencies {
 https://raw.githubusercontent.com/KimiyukiYamauchi/android.kotlin/main/images/android-head_flat.png
 ```
 
+```url
+https://raw.githubusercontent.com/KimiyukiYamauchi/android.kotlin/main/images/android-head_3D.png
+```
+
 ## `by`でエラー
 
 以下のimport文を追加
