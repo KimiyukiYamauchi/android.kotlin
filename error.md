@@ -143,3 +143,16 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 }
 ```
+
+## 「作業項目」を削除するタイミングで例外が発生
+
+原因は、削除後も getItem() の監視が継続し、該当データが0件になったにもかかわらず、DAOの戻り値が非NULLの Item と定義されているためです。
+
+戻り値をNullableに変更してください。
+
+ItemDao.kt
+
+```kotlin
+@Query("SELECT * FROM item WHERE id = :id")
+fun getItem(id: Int): Flow<Item?>
+```
