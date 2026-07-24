@@ -50,12 +50,23 @@ import androidx.compose.runtime.setValue
 `app/build.gradle.kts`の「compileSdk」の修正。
 
 ```kotlin
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.compose)
+    id("com.google.devtools.ksp") version "2.2.10-2.0.2" // 追加
+}
+
 android {
-    namespace = "com.example.order"
+    namespace = "com.example.mytodo"
+//    compileSdk {
+//        version = release(36) {
+//            minorApiLevel = 1
+//        }
+//    }
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.example.order"
+        applicationId = "com.example.mytodo"
         minSdk = 30
         targetSdk = 36
         versionCode = 1
@@ -78,6 +89,28 @@ android {
     buildFeatures {
         compose = true
     }
+}
+
+dependencies {
+    implementation("androidx.room:room-runtime:2.8.4") // 追加
+    implementation("androidx.room:room-ktx:2.8.4") // 追加
+    ksp("androidx.room:room-compiler:2.8.4") // 追加
+
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.activity.compose)
+    implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    testImplementation(libs.junit)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.junit)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    debugImplementation(libs.androidx.compose.ui.tooling)
 }
 ```
 
