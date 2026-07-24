@@ -6,8 +6,8 @@
 - [動作確認用の画像がない](#動作確認用の画像がない)
 - [`by`でエラー](#byでエラー)
 - [compilerのバージョンでビルドに失敗する](#compilerのバージョンでビルドに失敗する)
-- [WebViewの呼び出しでエラーとなる](#webviewの呼び出しでエラーとなる)
 - [Serializerが見つからない](#serializerが見つからない)
+- [NavHostController等が見つからない](#navhostcontroller等が見つからない)
 
 <!-- /TOC -->
 
@@ -114,38 +114,6 @@ dependencies {
 }
 ```
 
-## WebViewの呼び出しでエラーとなる
-
-Jetpack Composeで従来のAndroid ViewであるWebViewを表示する場合は、AndroidViewを使用します。
-
-```kotlin
-package com.example.webpageapp
-
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.viewinterop.AndroidView
-
-@Composable
-fun WebView(url: String) {
-    AndroidView(
-        factory = { context ->
-            android.webkit.WebView(context).apply {
-                webChromeClient = android.webkit.WebChromeClient()
-                webViewClient = android.webkit.WebViewClient()
-                settings.javaScriptEnabled = true
-                loadUrl(url)
-            }
-        }
-    )
-}
-
-@Preview
-@Composable
-fun WebViewPreview() {
-    WebView(url = "https://www.google.com/")
-}
-```
-
 ## Serializerが見つからない
 
 以下を追加
@@ -154,9 +122,6 @@ fun WebViewPreview() {
 
 ```kotlin
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-
     // これが必要
     alias(libs.plugins.kotlin.serialization)
 }
@@ -167,4 +132,14 @@ plugins {
 ```kotlin
 [plugins]
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+```
+
+## NavHostController等が見つからない
+
+以下を追加
+
+```kotlin
+dependencies {
+    implementation(libs.androidx.navigation.compose)
+}
 ```
